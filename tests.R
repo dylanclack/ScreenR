@@ -1,48 +1,54 @@
 tests <- function(vars, y, data, sig = 0.05) {
   significant_vars <- c()
   for (var in vars) {
-    corr <- test(var, y, data)
-    if (corr >= sig) {
-      append(significant_vars, var)
-    }
+    p_value <- test(var, y, data)
+    if (p_value <= sig) append(significant_vars, var)
   }
   return (significant_vars)
 }
 
-
-test <- function(var, y, data) {
+test <- function(var, y) {
   is_numeric_var <- is.numeric(var)
   is_numeric_y <- is.numeric(y)
   if (is_numeric_var & is_numeric_y) {
-    
+    return (test_QQ(var, y))
   } else if (!is_numeric_var & !is_numeric_y) {
-    
+    return (test_CC(var, y))
   } else {
-    
+    return (test_QC(var, y))
   }
 }
 
-test.QQ <- function(y, x) {
-    cor <- cor.test(x, y)
-    return(cor$p.value)
+# quantitative + quantitative
+test_QQ <- function(x, y) {
+    p_value <- cor.test(x, y)$p.value
+    return(p_value)
 }
 
-#categorical to quantitative--------
-cp_test=function(data, dep, indep, sig=0.05){
-  # data (dataframe) 
-  # dep (str): dependent variable
-  # indep (str): independent variable
-
-  numeric_var <- ifelse(is.numeric(data[dep]), dep, indep)
-  cate_var <- ifelse(is.numeric(data[dep]), indep, dep)
-  result0 <- aov(data[[numeric_var]] ~ data[[cate_var]])
-  result1 <- unlist(summary(result0))[9]
-  return (result1)
+# categorical + quantitative
+test_QC <- function(var, y) {
+  if (is.numeric(var)) {
+    numeric_var <- var
+    cat_var <- y
+  } else {
+    numeric_var <- y
+    cat_var <- var
+  }
+  test_result <- aov(numeric_var ~ cat_var)
+  p_value <- summary(test_result)[[1]]["Pr(>F)"][[1]][1]
+  return (p_value)
 }
 
-#example
-data("mtcars")
-mtcars$cyl=as.character(mtcars$cyl)
-x=cp_test(mtcars, 'mpg', 'cyl')
-print(x)
+test_CC <- function(var, y) {
+  p_value <- suppressWarnings(chisq.test(var, y))$p.value
+  return (p_value)
+}
+
+# examples for individual tests
+
+data("starwars")
+test(starwars$height, starwars$mass)
+test(starwars$sex, starwars$height)
+test(starwars$sex, starwars$gender)
+
 
