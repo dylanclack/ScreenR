@@ -1,7 +1,7 @@
 tests <- function(vars, y, data, sig = 0.05) {
   significant_vars <- c()
   for (var in vars) {
-    p_value <- test(var, y, data)
+    p_value <- test(data$var, data$y)
     if (p_value <= sig) append(significant_vars, var)
   }
   return (significant_vars)

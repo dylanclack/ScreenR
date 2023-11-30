@@ -1,13 +1,23 @@
 ## screen master function
 
+library(tidyverse)
 
 # An example to use throughout, will remove later
 library(ggplot2)
 data(mpg)
 data <- mpg
-formula <- hwy ~ cty + displ
-formula <- hwy ~ .
-threshold = 0.4
+
+# Missing data
+data <- mpg %>% mutate(missing = NA, one = 1)
+
+# Constant
+data[1, "one"] <- 1.01
+
+# formula <- hwy ~ cty + displ
+# formula <- hwy ~ .
+# threshold = 0.4
+
+
 
 screen <- function(formula, data, sig = 0.05, threshold = 0.4) {
   
@@ -56,8 +66,8 @@ screen <- function(formula, data, sig = 0.05, threshold = 0.4) {
   
   # Remove y variable from vars
   vars <- vars[vars != y]
-  
-  vars <- tests(vars, y, data, sig = sig)
+
+  # vars <- tests(vars, y, data, sig = sig)
 
   # Output ------------------------------------------------------------------
   
