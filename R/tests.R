@@ -1,8 +1,8 @@
 tests <- function(vars, y, data, sig = 0.05) {
   significant_vars <- c()
   for (var in vars) {
-    p_value <- test(data$var, data$y)
-    if (p_value <= sig) append(significant_vars, var)
+    p_value <- test(data[[var]], data[[y]])
+    if (p_value <= sig) significant_vars=c(significant_vars, var)
   }
   return (significant_vars)
 }
@@ -46,7 +46,8 @@ test_CC <- function(var, y) {
 
 # examples for individual tests
 
-# data("starwars")
-# test(starwars$height, starwars$mass)
+data("starwars")
+test(starwars$height, starwars$mass)
 # test(starwars$sex, starwars$height)
 # test(starwars$sex, starwars$gender)
+tests(c("mass", "skin_color"), "height", starwars)
