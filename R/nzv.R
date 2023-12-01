@@ -1,29 +1,39 @@
-#' @title variance_check
-#' @description checks the variance of the given variables and discards them if they have zero or near-zero variance
-#' @param nameVec character vector of variables to check 
-#' @param data the dataset 
-#' @return gives a character vector of variables with high variance
-#' @details Uses the \code{\link[https://www.rdocumentation.org/packages/caret/versions/6.0-92/topics/nearZeroVar]{nearZeroVar}} near zero variance function from the caret package
-#' @examples 
-#' \dontrun{
-#' variance_check(c("mpg", "hwy), mtcars)
-#' }
-#' @rdname variance_check
-#' @export 
-
 variance_check <- function(nameVec, data) {
-  variance_df <- data[nameVec]
   
-  badVars <- const_check(variance_df)
+  numVec <- character()
+  charVec <- character()
   
-  if(length(badVars) == 0){
-    return(nameVec)
+  for(i in 1:length(nameVec)) {
+    if(is.numeric(as.data.frame(data[,nameVec][i])[,1])){
+      numVec <- c(numVec, nameVec[i])
+    } else {
+      charVec <- c(charVec, nameVec[i])
+    }
   }
   
-  good_df <- subset(variance_df, select = -badVars)
-
+  badVars <- character()
+  if(length(numVec) != 0) {
+    variance_df <- data[numVec]
+    badVarsPos <- const_check(variance_df)
+    for (i in 1:length(badVarsPos)){
+      badVars <- c(badVars, colnames(variance_df)[badVarsPos[i]])
+    } 
+  }
   
-  good_vars <- colnames(good_df)
+  if(length(charVec) != 0) {
+    for(i in 1:length(charVec)) {
+      if(length(unique(as.data.frame(data[charVec])[,i])) == 1) {
+        badVars <- c(badVars, charVec[i])
+      }
+    }
+  }
+  
+  good_vars <- colnames(data[!colnames(data) %in% badVars])
+  
+  if(length(good_vars) == 0){
+    return(nameVec)
+  }
+
   return(good_vars)
 }
 

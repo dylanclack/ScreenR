@@ -15,8 +15,6 @@ missing.data <- function(data, var.names, threshold = 0.4) {
 }
 
 #example
-pct_miss(airquality[["Ozone"]])
-pct_miss(airquality[["Solar.R"]])
 
 missing.data(airquality, c("Ozone", "Solar.R"), threshold = 0.2)
 missing.data(airquality, c("Ozone", "Solar.R"), threshold = 0.3)

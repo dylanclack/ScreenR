@@ -46,7 +46,7 @@ screen <- function(formula, data, sig = 0.05, threshold = 0.4) {
   # Constant variable screen ------------------------------------------------
   
   vars <- variance_check(vars, data)
-  
+  print('hi')
   # If y variable does not pass constant screen
   if (!(y %in% vars)) {
     stop(paste0(y, " (dependent variable) is either constant or near constant"))
@@ -57,7 +57,7 @@ screen <- function(formula, data, sig = 0.05, threshold = 0.4) {
   # Remove y variable from vars
   vars <- vars[vars != y]
   
-  vars <- tests(vars, y, data, sig = sig)
+  #vars <- tests(vars, y, data, sig = sig)
 
   # Output ------------------------------------------------------------------
   
