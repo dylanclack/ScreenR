@@ -44,10 +44,10 @@ test_CC <- function(var, y) {
   return (p_value)
 }
 
-# examples for individual tests
-
-data("starwars")
-test(starwars$height, starwars$mass)
-# test(starwars$sex, starwars$height)
-# test(starwars$sex, starwars$gender)
-tests(c("mass", "skin_color"), "height", starwars)
+# # examples for individual tests
+# 
+# data("starwars")
+# test(starwars$height, starwars$mass)
+# # test(starwars$sex, starwars$height)
+# # test(starwars$sex, starwars$gender)
+# tests(c("mass", "skin_color"), "height", starwars)

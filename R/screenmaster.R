@@ -1,26 +1,22 @@
-## screen master function
-
-library(tidyverse)
-
-# An example to use throughout, will remove later
-library(ggplot2)
-data(mpg)
-data <- mpg
-
-# Missing data
-data <- mpg %>% mutate(missing = NA, one = 1)
-
-# Constant
-data[1, "one"] <- 1.01
-
-# formula <- hwy ~ cty + displ
-# formula <- hwy ~ .
-# threshold = 0.4
-
-
+#' @title Screen important variables
+#' @description The \code{screen} function screens statistically significant predictors of an outcome variable from a dataframe which contains multiple variables. 
+#' @param formula An object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.
+#' @param data A data frame
+#' @param sig Significance level, Default: 0.05
+#' @param threshold The threshold proportion of missing data to screen out a variable, Default: 0.4
+#' @return A character vector of significant variables
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  data(mtcars)
+#’  screen(mpg~., mtcars)
+#'  }
+#' }
+#’ @importFrom caret nearZeroVar nzv
+#' @rdname screen
+#' @export 
 
 screen <- function(formula, data, sig = 0.05, threshold = 0.4) {
-  
   # Stop messages -----------------------------------------------------------
   
   # Stop message for data frame
@@ -66,12 +62,10 @@ screen <- function(formula, data, sig = 0.05, threshold = 0.4) {
   
   # Remove y variable from vars
   vars <- vars[vars != y]
-
-  # vars <- tests(vars, y, data, sig = sig)
+  vars <- tests(vars, y, data, sig = sig)
 
   # Output ------------------------------------------------------------------
   
   return(vars)
   
 }
-
